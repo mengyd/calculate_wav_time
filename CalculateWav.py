@@ -1,43 +1,42 @@
 import wave
 import os
 
-def scan_wav(directory: str = None):
+def scan_wav(directory: str = None, sublevel = None):
     dir_duration = 0
-    # if not directory.endswith("__MACOSX"):
-    print("\t", "+" * 30)
-    print("\t", "计算文件夹 <", directory, "> ...")
 
-    # if not directory.endswith("__MACOSX"):
-    # dir_duration = 0
+    print("\t" * sublevel, "|", "+" * 30)
+    print("\t" * sublevel, "|", "计算文件夹 <", directory, "> ...")
+
     with os.scandir(directory) as filelist:
         for file in filelist:
-            if file.is_dir() and not file.name.endswith("__MACOSX"):
-                dir_duration += scan_wav(directory+"/"+file.name)
-            elif file.name.endswith(".wav"):
+            if file.is_dir() and not file.name.endswith("__MACOSX"): # if is directory
+                dir_duration += scan_wav(directory+"/"+file.name, sublevel+1)
+            elif file.name.endswith(".wav"): # if is wave file
                 try:
                     audio = wave.open(directory+"/"+file.name, 'rb')
-                    rate = audio.getframerate() # 总帧数
-                    frames = audio.getnframes() # 采样频率
-                    duration = frames/rate # 样本时长
+                    rate = audio.getframerate() # totle frame number
+                    frames = audio.getnframes() # frame rate
+                    duration = frames/rate # duration
                     dir_duration += duration
                 except Exception:
                     pass
-    # print("文件夹 <", directory + "/" + file.name, "> 内容：")
-    print("\t", dir_duration, "秒")
-    print("\t", dir_duration/60, "分钟")
-    print("\t", "-" * 30)
+    
+    print("\t" * sublevel, "|", dir_duration, "秒")
+    print("\t" * sublevel, "|", dir_duration/60, "分钟")
+    print("\t" * sublevel, "|", "-" * 30)
     return dir_duration
 
 ''' ----------------------------Main----------------------------- '''
 
 total_duration = 0
+sublevel_counter = 0
 # get current working directory
 workpath = os.getcwd()
 print('<' * 40)
 print("Working in:", workpath)
 print('>' * 40)
 
-total_duration = scan_wav(workpath)
+total_duration = scan_wav(workpath, sublevel=sublevel_counter)
 
 print("*" * 40)
 print("总时长：")
