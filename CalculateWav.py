@@ -21,8 +21,8 @@ def scan_wav(directory: str = None, sublevel = None):
                 except Exception:
                     pass
     
-    print("\t" * sublevel, "|", dir_duration, "秒")
-    print("\t" * sublevel, "|", dir_duration/60, "分钟")
+    print("\t" * sublevel, "|", format(dir_duration, '.0f'), "秒")
+    print("\t" * sublevel, "|", format(dir_duration/60, '.0f'), "分钟", format(dir_duration%60, '.0f'), "秒")
     print("\t" * sublevel, "|", "-" * 30)
     return dir_duration
 
@@ -40,8 +40,8 @@ total_duration = scan_wav(workpath, sublevel=sublevel_counter)
 
 print("*" * 40)
 print("总时长：")
-print(total_duration, "秒")
-print(total_duration/60, "分钟")
+print(format(total_duration, '.0f'), "秒")
+print(format(total_duration/60, '.0f'), "分钟", format(total_duration%60, '.0f'), "秒")
 
 # pause
 os.system('pause')
